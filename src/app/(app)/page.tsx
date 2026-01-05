@@ -29,6 +29,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import YopemServicesMenu from "@/components/yopem-services-menu"
 import { useAutoRefresh } from "@/hooks/use-auto-refresh"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { queryApi } from "@/lib/orpc/query"
@@ -153,6 +154,7 @@ function DashboardContent() {
             </Breadcrumb>
             <div className="ml-auto">
               <ThemeSwitcher />
+              <YopemServicesMenu />
             </div>
           </header>
 

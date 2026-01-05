@@ -5,6 +5,7 @@ import Link from "next/link"
 
 import Logo from "@/components/logo"
 import ThemeSwitcher from "@/components/theme/theme-switcher"
+import YopemServicesMenu from "@/components/yopem-services-menu"
 
 export default function LandingHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -56,7 +57,10 @@ export default function LandingHeader() {
             Read
           </Link>
         </div>
-        <ThemeSwitcher />
+        <div>
+          <ThemeSwitcher />
+          <YopemServicesMenu />
+        </div>
       </div>
     </header>
   )
