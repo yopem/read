@@ -1,6 +1,6 @@
 "use client"
 
-import { Field as FieldPrimitive } from "@base-ui-components/react/field"
+import { Field as FieldPrimitive } from "@base-ui/react/field"
 
 import { cn } from "@/lib/utils/style"
 
@@ -17,8 +17,21 @@ function Field({ className, ...props }: FieldPrimitive.Root.Props) {
 function FieldLabel({ className, ...props }: FieldPrimitive.Label.Props) {
   return (
     <FieldPrimitive.Label
-      className={cn("inline-flex items-center gap-2 text-sm/4", className)}
+      className={cn(
+        "text-foreground inline-flex items-center gap-2 text-base/4.5 font-medium sm:text-sm/4",
+        className,
+      )}
       data-slot="field-label"
+      {...props}
+    />
+  )
+}
+
+function FieldItem({ className, ...props }: FieldPrimitive.Item.Props) {
+  return (
+    <FieldPrimitive.Item
+      className={cn("flex", className)}
+      data-slot="field-item"
       {...props}
     />
   )
@@ -47,16 +60,6 @@ function FieldError({ className, ...props }: FieldPrimitive.Error.Props) {
   )
 }
 
-function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn("flex flex-col gap-2", className)}
-      data-slot="field-content"
-      {...props}
-    />
-  )
-}
-
 const FieldControl = FieldPrimitive.Control
 const FieldValidity = FieldPrimitive.Validity
 
@@ -65,7 +68,7 @@ export {
   FieldLabel,
   FieldDescription,
   FieldError,
-  FieldContent,
   FieldControl,
+  FieldItem,
   FieldValidity,
 }

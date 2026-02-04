@@ -1,9 +1,10 @@
 "use client"
 
-import { AlertDialog as AlertDialogPrimitive } from "@base-ui-components/react/alert-dialog"
+import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog"
 
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils/style"
+
+const AlertDialogCreateHandle = AlertDialogPrimitive.createHandle
 
 const AlertDialog = AlertDialogPrimitive.Root
 
@@ -38,7 +39,7 @@ function AlertDialogViewport({
   return (
     <AlertDialogPrimitive.Viewport
       className={cn(
-        "fixed inset-0 z-50 grid grid-rows-[1fr_auto] justify-items-center pt-6 sm:grid-rows-[1fr_auto_3fr] sm:p-4",
+        "fixed inset-0 z-50 grid grid-rows-[1fr_auto_3fr] justify-items-center p-4",
         className,
       )}
       data-slot="alert-dialog-viewport"
@@ -49,15 +50,25 @@ function AlertDialogViewport({
 
 function AlertDialogPopup({
   className,
+  bottomStickOnMobile = true,
   ...props
-}: AlertDialogPrimitive.Popup.Props) {
+}: AlertDialogPrimitive.Popup.Props & {
+  bottomStickOnMobile?: boolean
+}) {
   return (
     <AlertDialogPortal>
       <AlertDialogBackdrop />
-      <AlertDialogViewport>
+      <AlertDialogViewport
+        className={cn(
+          bottomStickOnMobile &&
+            "max-sm:grid-rows-[1fr_auto] max-sm:p-0 max-sm:pt-12",
+        )}
+      >
         <AlertDialogPrimitive.Popup
           className={cn(
-            "bg-popover text-popover-foreground relative row-start-2 grid max-h-full w-full min-w-0 border-t bg-clip-padding opacity-[calc(1-0.1*var(--nested-dialogs))] shadow-lg transition-[scale,opacity,translate] duration-200 ease-in-out will-change-transform before:pointer-events-none before:absolute before:inset-0 before:shadow-[0_1px_--theme(--color-black/4%)] data-ending-style:opacity-0 data-nested-dialog-open:origin-top data-starting-style:opacity-0 max-sm:opacity-[calc(1-min(var(--nested-dialogs),1))] max-sm:before:hidden max-sm:data-ending-style:translate-y-4 max-sm:data-starting-style:translate-y-4 sm:max-w-lg sm:-translate-y-[calc(1.25rem*var(--nested-dialogs))] sm:scale-[calc(1-0.1*var(--nested-dialogs))] sm:rounded-2xl sm:border sm:before:rounded-[calc(var(--radius-2xl)-1px)] sm:data-ending-style:scale-98 sm:data-nested:data-ending-style:translate-y-8 sm:data-starting-style:scale-98 sm:data-nested:data-starting-style:translate-y-8 dark:bg-clip-border dark:before:shadow-[0_-1px_--theme(--color-white/8%)]",
+            "bg-popover text-popover-foreground relative row-start-2 flex max-h-full min-h-0 w-full max-w-lg min-w-0 -translate-y-[calc(1.25rem*var(--nested-dialogs))] scale-[calc(1-0.1*var(--nested-dialogs))] flex-col rounded-2xl border opacity-[calc(1-0.1*var(--nested-dialogs))] shadow-lg/5 transition-[scale,opacity,translate] duration-200 ease-in-out will-change-transform not-dark:bg-clip-padding before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-2xl)-1px)] before:shadow-[0_1px_--theme(--color-black/6%)] data-ending-style:scale-98 data-ending-style:opacity-0 data-nested:data-ending-style:translate-y-8 data-nested-dialog-open:origin-top data-starting-style:scale-98 data-starting-style:opacity-0 data-nested:data-starting-style:translate-y-8 dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+            bottomStickOnMobile &&
+              "max-sm:max-w-none max-sm:rounded-none max-sm:border-x-0 max-sm:border-t max-sm:border-b-0 max-sm:opacity-[calc(1-min(var(--nested-dialogs),1))] max-sm:before:hidden max-sm:before:rounded-none max-sm:data-ending-style:translate-y-4 max-sm:data-starting-style:translate-y-4",
             className,
           )}
           data-slot="alert-dialog-popup"
@@ -75,7 +86,7 @@ function AlertDialogHeader({
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 p-6 text-center not-has-[+[data-slot=alert-dialog-footer]]:pb-4 max-sm:pb-4 sm:text-left",
+        "flex flex-col gap-2 p-6 text-center max-sm:pb-4 sm:text-left",
         className,
       )}
       data-slot="alert-dialog-header"
@@ -94,9 +105,9 @@ function AlertDialogFooter({
   return (
     <div
       className={cn(
-        "flex flex-col-reverse gap-2 px-6 sm:flex-row sm:justify-end sm:rounded-b-xl",
-        variant === "default" && "bg-muted/50 border-t py-4",
-        variant === "bare" && "pt-4 pb-6",
+        "flex flex-col-reverse gap-2 px-6 sm:flex-row sm:justify-end sm:rounded-b-[calc(var(--radius-2xl)-1px)]",
+        variant === "default" && "bg-muted/72 border-t py-4",
+        variant === "bare" && "pb-6",
         className,
       )}
       data-slot="alert-dialog-footer"
@@ -111,7 +122,10 @@ function AlertDialogTitle({
 }: AlertDialogPrimitive.Title.Props) {
   return (
     <AlertDialogPrimitive.Title
-      className={cn("font-heading text-xl leading-none", className)}
+      className={cn(
+        "font-heading text-xl leading-none font-semibold",
+        className,
+      )}
       data-slot="alert-dialog-title"
       {...props}
     />
@@ -137,29 +151,8 @@ function AlertDialogClose(props: AlertDialogPrimitive.Close.Props) {
   )
 }
 
-function AlertDialogAction({
-  className,
-  ...props
-}: React.ComponentProps<"button">) {
-  return (
-    <AlertDialogClose>
-      <Button className={className} {...props} />
-    </AlertDialogClose>
-  )
-}
-
-function AlertDialogCancel({
-  className,
-  ...props
-}: React.ComponentProps<"button">) {
-  return (
-    <AlertDialogClose>
-      <Button className={className} variant="secondary" {...props} />
-    </AlertDialogClose>
-  )
-}
-
 export {
+  AlertDialogCreateHandle,
   AlertDialog,
   AlertDialogPortal,
   AlertDialogBackdrop,
@@ -172,7 +165,5 @@ export {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogClose,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogViewport,
 }
