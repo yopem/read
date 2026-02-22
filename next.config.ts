@@ -31,20 +31,23 @@ const securityHeaders = [
 const config: NextConfig = {
   experimental: {
     turbopackFileSystemCacheForDev: true,
+    serverSourceMaps: false,
+    preloadEntriesOnStart: false,
   },
+  serverExternalPackages: ["pg", "ioredis"],
+  enablePrerenderSourceMaps: false,
+  productionBrowserSourceMaps: false,
   reactCompiler: true,
   reactStrictMode: true,
-  typescript: { ignoreBuildErrors: true },
-  productionBrowserSourceMaps: false,
-  compiler: {
-    ...(process.env["APP_ENV"] === "production"
+  // cacheComponents: true,
+  typescript: { ignoreBuildErrors: false },
+  compiler: (process.env["APP_ENV"] === "production"
       ? {
           removeConsole: {
             exclude: ["error", "warn"],
           },
         }
       : {}),
-  },
   images: {
     remotePatterns: [
       {
