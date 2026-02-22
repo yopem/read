@@ -41,13 +41,14 @@ const config: NextConfig = {
   reactStrictMode: true,
   // cacheComponents: true,
   typescript: { ignoreBuildErrors: false },
-  compiler: (process.env["APP_ENV"] === "production"
+  compiler:
+    process.env["APP_ENV"] === "production"
       ? {
           removeConsole: {
             exclude: ["error", "warn"],
           },
         }
-      : {}),
+      : {},
   images: {
     remotePatterns: [
       {
