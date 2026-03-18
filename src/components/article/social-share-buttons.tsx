@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import {
   CheckIcon,
   CopyIcon,
@@ -11,6 +10,7 @@ import {
   Share2Icon,
   TwitterIcon,
 } from "lucide-react"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -20,12 +20,12 @@ import {
   MenuSeparator,
   MenuTrigger,
 } from "@/components/ui/menu"
-import { toast } from "@/components/ui/toast"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { toast } from "@/lib/utils/toast"
 
 interface SocialShareButtonsProps {
   url: string

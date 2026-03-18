@@ -1,10 +1,10 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import { ExternalLinkIcon } from "lucide-react"
+import Image from "next/image"
+import { useEffect, useRef, useState } from "react"
 
 import { EmptyState } from "@/components/shared/empty-state"
 import { LoadingSkeleton } from "@/components/shared/loading-skeleton"
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { queryApi } from "@/lib/orpc/query"
 import { sanitizeHtml, stripHtml } from "@/lib/utils/html"
+
 import { ArticleActions } from "./article-actions"
 
 interface ArticleWithFeed {
@@ -168,20 +169,19 @@ export function ArticleReader({ articleId }: ArticleReaderProps) {
             {article.redditPermalink && (
               <div className="mt-4">
                 <Button
-                  variant="outline"
-                  size="sm"
                   className="gap-2"
-                  render={(props) => (
+                  render={
                     <a
                       href={`https://www.reddit.com${article.redditPermalink}`}
-                      target="_blank"
                       rel="noopener noreferrer"
-                      {...props}
+                      target="_blank"
                     >
                       <ExternalLinkIcon className="h-4 w-4" />
                       View Discussion on Reddit
                     </a>
-                  )}
+                  }
+                  size="sm"
+                  variant="outline"
                 />
               </div>
             )}

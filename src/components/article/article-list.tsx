@@ -1,13 +1,15 @@
 "use client"
 
-import { useEffect, useMemo, useRef } from "react"
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { FileTextIcon, Loader2Icon } from "lucide-react"
 import { parseAsString, useQueryState } from "nuqs"
+import { useEffect, useMemo, useRef } from "react"
 
 import type { FilterType } from "@/components/feed/feed-filter"
+
 import { EmptyState } from "@/components/shared/empty-state"
 import { queryApi } from "@/lib/orpc/query"
+
 import { ArticleCard } from "./article-card"
 
 export function ArticleList() {

@@ -1,6 +1,7 @@
 "use client"
 
 import type * as React from "react"
+
 import { Dialog as CommandDialogPrimitive } from "@base-ui/react/dialog"
 import { SearchIcon } from "lucide-react"
 
@@ -91,14 +92,14 @@ function CommandDialogPopup({
 function Command({
   autoHighlight = "always",
   keepHighlight = true,
+  open = true,
   ...props
 }: React.ComponentProps<typeof Autocomplete>) {
   return (
     <Autocomplete
       autoHighlight={autoHighlight}
-      inline
       keepHighlight={keepHighlight}
-      open
+      open={open}
       {...props}
     />
   )

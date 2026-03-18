@@ -2,7 +2,6 @@
 
 "use client"
 
-import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
@@ -12,13 +11,14 @@ import {
   MessageCircleIcon,
   StarIcon,
 } from "lucide-react"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardFooter, CardHeader, CardPanel } from "@/components/ui/card"
-import { toast } from "@/components/ui/toast"
 import { queryApi } from "@/lib/orpc/query"
 import { cn } from "@/lib/utils"
 import { stripHtml } from "@/lib/utils/html"
+import { toast } from "@/lib/utils/toast"
 
 dayjs.extend(relativeTime)
 

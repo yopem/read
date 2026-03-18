@@ -1,7 +1,5 @@
 "use client"
 
-import { useState } from "react"
-import Image from "next/image"
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
@@ -12,6 +10,8 @@ import {
   SearchIcon,
   XIcon,
 } from "lucide-react"
+import Image from "next/image"
+import { useState } from "react"
 import { z } from "zod"
 
 import { Badge } from "@/components/ui/badge"
@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/dialog"
 import {
   Field,
-  FieldContent,
   FieldDescription,
   FieldError,
   FieldLabel,
@@ -34,8 +33,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs"
-import { toast } from "@/components/ui/toast"
 import { queryApi } from "@/lib/orpc/query"
+import { toast } from "@/lib/utils/toast"
 
 interface AddFeedDialogProps {
   isOpen: boolean
@@ -587,29 +586,27 @@ export function AddFeedDialog({ isOpen, onClose }: AddFeedDialogProps) {
                 >
                   {(field) => (
                     <Field data-invalid={field.state.meta.errors.length > 0}>
-                      <FieldContent className="w-full">
-                        <FieldLabel htmlFor={field.name}>
-                          RSS/Atom Feed URL
-                        </FieldLabel>
-                        <Input
-                          id={field.name}
-                          name={field.name}
-                          type="text"
-                          value={field.state.value}
-                          onBlur={field.handleBlur}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                          placeholder="https://example.com/feed.xml"
-                          disabled={createFeed.isPending}
-                          aria-invalid={field.state.meta.errors.length > 0}
-                        />
-                        <FieldDescription>
-                          Enter the URL of an RSS or Atom feed. Common paths:
-                          /feed, /rss, /atom.xml
-                        </FieldDescription>
-                        {field.state.meta.errors.length > 0 && (
-                          <FieldError>{field.state.meta.errors[0]!}</FieldError>
-                        )}
-                      </FieldContent>
+                      <FieldLabel htmlFor={field.name}>
+                        RSS/Atom Feed URL
+                      </FieldLabel>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        type="text"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="https://example.com/feed.xml"
+                        disabled={createFeed.isPending}
+                        aria-invalid={field.state.meta.errors.length > 0}
+                      />
+                      <FieldDescription>
+                        Enter the URL of an RSS or Atom feed. Common paths:
+                        /feed, /rss, /atom.xml
+                      </FieldDescription>
+                      {field.state.meta.errors.length > 0 && (
+                        <FieldError>{field.state.meta.errors[0]!}</FieldError>
+                      )}
                     </Field>
                   )}
                 </form.Field>

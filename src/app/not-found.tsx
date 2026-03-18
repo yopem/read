@@ -1,5 +1,5 @@
-import Link from "next/link"
 import { HomeIcon, SearchIcon } from "lucide-react"
+import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 
@@ -17,23 +17,23 @@ export default function NotFound() {
 
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Button
-            render={(props) => (
-              <Link {...props} href="/">
+            render={
+              <Link href="/">
                 <HomeIcon className="h-4 w-4" />
                 Go home
               </Link>
-            )}
+            }
             size="lg"
           />
           <Button
-            render={(props) => (
-              <Link {...props} href="/">
+            render={
+              <Link href="/">
                 <SearchIcon className="h-4 w-4" />
                 Search articles
               </Link>
-            )}
-            variant="outline"
+            }
             size="lg"
+            variant="outline"
           />
         </div>
       </div>

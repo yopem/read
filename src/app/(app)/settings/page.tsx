@@ -1,10 +1,13 @@
 "use client"
 
-import { Suspense } from "react"
+import type { z } from "zod"
+
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { parseAsString, useQueryState } from "nuqs"
-import type { z } from "zod"
+import { Suspense } from "react"
+
+import type { SelectUserSettings } from "@/lib/db/schema/user-settings"
 
 import { SettingsSidebar } from "@/components/layout/settings-sidebar"
 import { LoadingSkeleton } from "@/components/shared/loading-skeleton"
@@ -12,16 +15,14 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
   Field,
-  FieldContent,
   FieldDescription,
   FieldError,
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/toast"
 import { updateUserSettingsSchema } from "@/lib/db/schema"
-import type { SelectUserSettings } from "@/lib/db/schema/user-settings"
 import { queryApi } from "@/lib/orpc/query"
+import { toast } from "@/lib/utils/toast"
 
 const formSchema = updateUserSettingsSchema.pick({
   autoRefreshEnabled: true,
@@ -153,33 +154,29 @@ function SettingsContent() {
                   >
                     {(field) => (
                       <Field data-invalid={field.state.meta.errors.length > 0}>
-                        <FieldContent>
-                          <div className="flex items-center gap-3">
-                            <input
-                              id={field.name}
-                              name={field.name}
-                              type="checkbox"
-                              checked={field.state.value}
-                              onChange={(e) =>
-                                field.handleChange(e.target.checked)
-                              }
-                              disabled={updateSettings.isPending}
-                              className="border-border h-4 w-4 rounded"
-                            />
-                            <FieldLabel htmlFor={field.name} className="mb-0">
-                              Enable automatic feed refresh
-                            </FieldLabel>
-                          </div>
-                          <FieldDescription>
-                            Automatically check for new articles when you log
-                            in, based on your refresh interval
-                          </FieldDescription>
-                          {field.state.meta.errors.length > 0 && (
-                            <FieldError>
-                              {field.state.meta.errors[0]!}
-                            </FieldError>
-                          )}
-                        </FieldContent>
+                        <div className="flex items-center gap-3">
+                          <input
+                            id={field.name}
+                            name={field.name}
+                            type="checkbox"
+                            checked={field.state.value}
+                            onChange={(e) =>
+                              field.handleChange(e.target.checked)
+                            }
+                            disabled={updateSettings.isPending}
+                            className="border-border h-4 w-4 rounded"
+                          />
+                          <FieldLabel htmlFor={field.name} className="mb-0">
+                            Enable automatic feed refresh
+                          </FieldLabel>
+                        </div>
+                        <FieldDescription>
+                          Automatically check for new articles when you log in,
+                          based on your refresh interval
+                        </FieldDescription>
+                        {field.state.meta.errors.length > 0 && (
+                          <FieldError>{field.state.meta.errors[0]!}</FieldError>
+                        )}
                       </Field>
                     )}
                   </form.Field>
@@ -202,35 +199,31 @@ function SettingsContent() {
                   >
                     {(field) => (
                       <Field data-invalid={field.state.meta.errors.length > 0}>
-                        <FieldContent>
-                          <FieldLabel htmlFor={field.name}>
-                            Refresh Interval (hours)
-                          </FieldLabel>
-                          <Input
-                            id={field.name}
-                            name={field.name}
-                            type="number"
-                            min={1}
-                            max={168}
-                            value={field.state.value ?? ""}
-                            onBlur={field.handleBlur}
-                            onChange={(e) => {
-                              const val = parseInt(e.target.value, 10)
-                              field.handleChange(isNaN(val) ? 0 : val)
-                            }}
-                            disabled={updateSettings.isPending}
-                            aria-invalid={field.state.meta.errors.length > 0}
-                          />
-                          <FieldDescription>
-                            How many hours to wait between automatic refreshes
-                            (1-168 hours)
-                          </FieldDescription>
-                          {field.state.meta.errors.length > 0 && (
-                            <FieldError>
-                              {field.state.meta.errors[0]!}
-                            </FieldError>
-                          )}
-                        </FieldContent>
+                        <FieldLabel htmlFor={field.name}>
+                          Refresh Interval (hours)
+                        </FieldLabel>
+                        <Input
+                          id={field.name}
+                          name={field.name}
+                          type="number"
+                          min={1}
+                          max={168}
+                          value={field.state.value ?? ""}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value, 10)
+                            field.handleChange(isNaN(val) ? 0 : val)
+                          }}
+                          disabled={updateSettings.isPending}
+                          aria-invalid={field.state.meta.errors.length > 0}
+                        />
+                        <FieldDescription>
+                          How many hours to wait between automatic refreshes
+                          (1-168 hours)
+                        </FieldDescription>
+                        {field.state.meta.errors.length > 0 && (
+                          <FieldError>{field.state.meta.errors[0]!}</FieldError>
+                        )}
                       </Field>
                     )}
                   </form.Field>
@@ -304,52 +297,48 @@ function SettingsContent() {
                   >
                     {(field) => (
                       <Field data-invalid={field.state.meta.errors.length > 0}>
-                        <FieldContent>
-                          <FieldLabel htmlFor={field.name}>
-                            Article Retention Period (days)
-                          </FieldLabel>
-                          <Input
-                            id={field.name}
-                            name={field.name}
-                            type="number"
-                            min={1}
-                            max={365}
-                            value={field.state.value ?? ""}
-                            onBlur={field.handleBlur}
-                            onChange={(e) => {
-                              const val = parseInt(e.target.value, 10)
-                              field.handleChange(isNaN(val) ? 0 : val)
-                            }}
-                            disabled={updateSettings.isPending}
-                            aria-invalid={field.state.meta.errors.length > 0}
-                          />
-                          <FieldDescription>
-                            Automatically delete articles older than this many
-                            days (1-365 days)
-                          </FieldDescription>
-                          <div className="mt-3">
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              size="sm"
-                              onClick={() => expireArticles.mutate(undefined)}
-                              disabled={expireArticles.isPending}
-                            >
-                              {expireArticles.isPending
-                                ? "Deleting..."
-                                : "Delete Old Articles Now"}
-                            </Button>
-                            <p className="text-muted-foreground mt-2 text-sm">
-                              Immediately delete articles older than your
-                              retention setting
-                            </p>
-                          </div>
-                          {field.state.meta.errors.length > 0 && (
-                            <FieldError>
-                              {field.state.meta.errors[0]!}
-                            </FieldError>
-                          )}
-                        </FieldContent>
+                        <FieldLabel htmlFor={field.name}>
+                          Article Retention Period (days)
+                        </FieldLabel>
+                        <Input
+                          id={field.name}
+                          name={field.name}
+                          type="number"
+                          min={1}
+                          max={365}
+                          value={field.state.value ?? ""}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value, 10)
+                            field.handleChange(isNaN(val) ? 0 : val)
+                          }}
+                          disabled={updateSettings.isPending}
+                          aria-invalid={field.state.meta.errors.length > 0}
+                        />
+                        <FieldDescription>
+                          Automatically delete articles older than this many
+                          days (1-365 days)
+                        </FieldDescription>
+                        <div className="mt-3">
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => expireArticles.mutate(undefined)}
+                            disabled={expireArticles.isPending}
+                          >
+                            {expireArticles.isPending
+                              ? "Deleting..."
+                              : "Delete Old Articles Now"}
+                          </Button>
+                          <p className="text-muted-foreground mt-2 text-sm">
+                            Immediately delete articles older than your
+                            retention setting
+                          </p>
+                        </div>
+                        {field.state.meta.errors.length > 0 && (
+                          <FieldError>{field.state.meta.errors[0]!}</FieldError>
+                        )}
                       </Field>
                     )}
                   </form.Field>
@@ -424,33 +413,29 @@ function SettingsContent() {
                   >
                     {(field) => (
                       <Field data-invalid={field.state.meta.errors.length > 0}>
-                        <FieldContent>
-                          <div className="flex items-center gap-3">
-                            <input
-                              id={field.name}
-                              name={field.name}
-                              type="checkbox"
-                              checked={field.state.value}
-                              onChange={(e) =>
-                                field.handleChange(e.target.checked)
-                              }
-                              disabled={updateSettings.isPending}
-                              className="border-border h-4 w-4 rounded"
-                            />
-                            <FieldLabel htmlFor={field.name} className="mb-0">
-                              Show filter count badges
-                            </FieldLabel>
-                          </div>
-                          <FieldDescription>
-                            Display article counts next to filter options in the
-                            sidebar
-                          </FieldDescription>
-                          {field.state.meta.errors.length > 0 && (
-                            <FieldError>
-                              {field.state.meta.errors[0]!}
-                            </FieldError>
-                          )}
-                        </FieldContent>
+                        <div className="flex items-center gap-3">
+                          <input
+                            id={field.name}
+                            name={field.name}
+                            type="checkbox"
+                            checked={field.state.value}
+                            onChange={(e) =>
+                              field.handleChange(e.target.checked)
+                            }
+                            disabled={updateSettings.isPending}
+                            className="border-border h-4 w-4 rounded"
+                          />
+                          <FieldLabel htmlFor={field.name} className="mb-0">
+                            Show filter count badges
+                          </FieldLabel>
+                        </div>
+                        <FieldDescription>
+                          Display article counts next to filter options in the
+                          sidebar
+                        </FieldDescription>
+                        {field.state.meta.errors.length > 0 && (
+                          <FieldError>{field.state.meta.errors[0]!}</FieldError>
+                        )}
                       </Field>
                     )}
                   </form.Field>

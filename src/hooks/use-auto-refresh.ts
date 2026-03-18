@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query"
+import { useEffect } from "react"
 
 import type { SelectUserSettings } from "@/lib/db/schema/user-settings"
+
 import { queryApi } from "@/lib/orpc/query"
 
 export function useAutoRefresh() {

@@ -21,29 +21,21 @@ export default function FinalCTASection() {
 
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:mt-8 sm:flex-row">
                 <Button
-                  size="lg"
                   className="group w-full sm:w-auto"
-                  render={(props) => (
-                    <Link href="/auth/login" {...props}>
-                      {props.children}
+                  render={
+                    <Link href="/auth/login">
+                      Get Started Free
+                      <ArrowRightIcon className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>
-                  )}
-                >
-                  Get Started Free
-                  <ArrowRightIcon className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
+                  }
+                  size="lg"
+                />
                 <Button
+                  className="w-full sm:w-auto"
+                  render={<Link href="#features">Learn More</Link>}
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto"
-                  render={(props) => (
-                    <Link href="#features" {...props}>
-                      {props.children}
-                    </Link>
-                  )}
-                >
-                  Learn More
-                </Button>
+                />
               </div>
 
               <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs sm:mt-6 sm:gap-4 sm:text-sm md:gap-6">

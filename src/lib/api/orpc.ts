@@ -110,7 +110,7 @@ const rateLimitMiddleware = o.middleware(async ({ context, next }) => {
     })
   }
 
-  return next()
+  return await next()
 })
 
 export const publicProcedure = o.use(timingMiddleware)

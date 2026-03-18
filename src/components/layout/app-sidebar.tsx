@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
   BookmarkIcon,
@@ -24,6 +23,7 @@ import {
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import { parseAsString, useQueryState } from "nuqs"
+import { useEffect, useState } from "react"
 
 import { AddFeedDialog } from "@/components/feed/add-feed-dialog"
 import { AddTagDialog } from "@/components/feed/add-tag-dialog"
@@ -58,10 +58,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
-import { toast } from "@/components/ui/toast"
 import { logout } from "@/lib/auth/logout"
 import { queryApi } from "@/lib/orpc/query"
 import { cn } from "@/lib/utils"
+import { toast } from "@/lib/utils/toast"
 
 interface FeedWithTags {
   id: string
@@ -92,7 +92,33 @@ const filterItems = [
   { value: "recentlyRead" as const, label: "Recently Read", icon: ClockIcon },
 ]
 
+function FeedMenuTriggerButton({
+  isHovered,
+  onClick,
+}: {
+  isHovered: boolean
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+}) {
+  return (
+    <button
+      className={cn(
+        "hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring h-6 w-6 shrink-0 items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:ring-1 focus-visible:outline-none",
+        isHovered ? "inline-flex" : "hidden",
+      )}
+      onClick={(e) => {
+        e.stopPropagation()
+        onClick?.(e)
+      }}
+      type="button"
+    >
+      <span className="sr-only">More options</span>
+      <MoreHorizontalIcon className="h-4 w-4" />
+    </button>
+  )
+}
+
 export function AppSidebar() {
+  const [_mounted, setMounted] = useState(false)
   const [feedSlug, setFeedSlug] = useQueryState(
     "feed",
     parseAsString.withDefault(""),
@@ -108,6 +134,10 @@ export function AppSidebar() {
   const [hoveredFeedId, setHoveredFeedId] = useState<string | null>(null)
   const [isFeedsHeaderHovered, setIsFeedsHeaderHovered] = useState(false)
   const [isTagsHeaderHovered, setIsTagsHeaderHovered] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   const [editingFeed, setEditingFeed] = useState<{
     id: string
     title: string
@@ -691,23 +721,9 @@ export function AppSidebar() {
                         </SidebarMenuButton>
                         <Menu modal={false}>
                           <MenuTrigger
-                            render={(props) => (
-                              <button
-                                {...props}
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  props.onClick?.(e)
-                                }}
-                                className={cn(
-                                  "hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring h-6 w-6 shrink-0 items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:ring-1 focus-visible:outline-none",
-                                  isHovered ? "inline-flex" : "hidden",
-                                )}
-                              >
-                                <span className="sr-only">More options</span>
-                                <MoreHorizontalIcon className="h-4 w-4" />
-                              </button>
-                            )}
+                            render={
+                              <FeedMenuTriggerButton isHovered={isHovered} />
+                            }
                           />
                           <MenuPopup
                             align="end"
@@ -800,11 +816,10 @@ export function AppSidebar() {
               ) : user ? (
                 <Menu>
                   <MenuTrigger
-                    render={(props) => (
+                    render={
                       <SidebarMenuButton
-                        {...props}
-                        size="lg"
                         className="data-[state=open]:bg-accent data-[state=open]:text-accent-foreground hover:bg-accent/50 h-auto w-full py-2.5 transition-colors"
+                        size="lg"
                       >
                         <Avatar className="border-border/50 h-10 w-10 shrink-0 border">
                           <AvatarImage src={user.image ?? undefined} />
@@ -822,7 +837,7 @@ export function AppSidebar() {
                         </div>
                         <ChevronUpIcon className="text-foreground ml-auto h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                       </SidebarMenuButton>
-                    )}
+                    }
                   />
                   <MenuPopup
                     align="end"
@@ -865,30 +880,29 @@ export function AppSidebar() {
                       </span>
                     </MenuItem>
                     <MenuItem
-                      render={(props) => (
+                      render={
                         <Link
-                          {...props}
-                          href="/settings"
                           className="inline-flex cursor-pointer items-center gap-2 px-2 py-2.5"
+                          href="/settings"
                         >
                           <SettingsIcon className="size-4" />
                           <span>Settings</span>
                         </Link>
-                      )}
+                      }
                     />
                     <MenuSeparator />
                     <MenuItem
-                      render={(props) => (
-                        <form {...props} action={logout} className="w-full">
+                      render={
+                        <form action={logout} className="w-full">
                           <button
-                            type="submit"
                             className="flex w-full cursor-pointer items-center gap-2 px-2 py-2.5"
+                            type="submit"
                           >
                             <LogOutIcon className="h-4 w-4" />
                             <span>Log out</span>
                           </button>
                         </form>
-                      )}
+                      }
                     />
                   </MenuPopup>
                 </Menu>

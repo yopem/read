@@ -4,16 +4,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
+  AlertDialogClose,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogPopup,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { toast } from "@/components/ui/toast"
+import { Button } from "@/components/ui/button"
 import { queryApi } from "@/lib/orpc/query"
+import { toast } from "@/lib/utils/toast"
 
 interface DeleteFeedDialogProps {
   isOpen: boolean
@@ -63,16 +63,18 @@ export function DeleteFeedDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={deleteFeed.isPending}>
-            Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction
+          <AlertDialogClose>
+            <Button variant="secondary" disabled={deleteFeed.isPending}>
+              Cancel
+            </Button>
+          </AlertDialogClose>
+          <Button
             onClick={handleDelete}
             disabled={deleteFeed.isPending}
-            className="bg-destructive hover:bg-destructive/90"
+            variant="destructive"
           >
             {deleteFeed.isPending ? "Deleting..." : "Delete"}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogPopup>
     </AlertDialog>

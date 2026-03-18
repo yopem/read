@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-properties */
 
-import { NextResponse } from "next/server"
 import { and, eq, lt } from "drizzle-orm"
+import { NextResponse } from "next/server"
 
 import { db } from "@/lib/db"
 import { articleTable } from "@/lib/db/schema"

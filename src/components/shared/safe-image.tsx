@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
 import Image, { type ImageProps } from "next/image"
+import { useState } from "react"
 
 export function SafeImage(props: ImageProps) {
   const [hasError, setHasError] = useState(false)

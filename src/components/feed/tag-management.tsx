@@ -1,15 +1,14 @@
 "use client"
 
-import { useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { EditIcon, PlusIcon, TagIcon, TrashIcon } from "lucide-react"
+import { useState } from "react"
 
 import { EmptyState } from "@/components/shared/empty-state"
 import { LoadingSkeleton } from "@/components/shared/loading-skeleton"
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
+  AlertDialogClose,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
@@ -19,8 +18,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/toast"
 import { queryApi } from "@/lib/orpc/query"
+import { toast } from "@/lib/utils/toast"
 
 export function TagManagement() {
   const [isAddingTag, setIsAddingTag] = useState(false)
@@ -212,16 +211,18 @@ export function TagManagement() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={deleteTag.isPending}>
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
+              <AlertDialogClose>
+                <Button variant="secondary" disabled={deleteTag.isPending}>
+                  Cancel
+                </Button>
+              </AlertDialogClose>
+              <Button
                 onClick={() => deleteTag.mutate(deletingTag.id)}
                 disabled={deleteTag.isPending}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                variant="destructive"
               >
                 {deleteTag.isPending ? "Deleting..." : "Delete"}
-              </AlertDialogAction>
+              </Button>
             </AlertDialogFooter>
           </AlertDialogPopup>
         </AlertDialog>

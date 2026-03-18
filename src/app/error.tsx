@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
-import Link from "next/link"
 import { AlertCircleIcon, HomeIcon, RefreshCwIcon } from "lucide-react"
+import Link from "next/link"
+import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import { appEnv } from "@/lib/env/client"
@@ -55,14 +55,14 @@ export default function Error({
             Try again
           </Button>
           <Button
-            render={(props) => (
-              <Link {...props} href="/">
+            render={
+              <Link href="/">
                 <HomeIcon className="h-4 w-4" />
                 Go home
               </Link>
-            )}
-            variant="outline"
+            }
             size="lg"
+            variant="outline"
           />
         </div>
       </div>

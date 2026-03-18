@@ -1,9 +1,9 @@
 "use client"
 
-import * as React from "react"
+import { ForesightManager, type ForesightRect } from "js.foresight"
 import NextLink, { type LinkProps as NextLinkProps } from "next/link"
 import { useRouter } from "next/navigation"
-import { ForesightManager, type ForesightRect } from "js.foresight"
+import * as React from "react"
 
 interface LinkProps
   extends

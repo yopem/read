@@ -1,8 +1,9 @@
 "use client"
 
+import type { z } from "zod"
+
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import type { z } from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -14,16 +15,15 @@ import {
 } from "@/components/ui/dialog"
 import {
   Field,
-  FieldContent,
   FieldDescription,
   FieldError,
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { toast } from "@/components/ui/toast"
 import { insertTagSchema } from "@/lib/db/schema"
 import { queryApi } from "@/lib/orpc/query"
+import { toast } from "@/lib/utils/toast"
 
 interface AddTagDialogProps {
   isOpen: boolean
@@ -103,26 +103,24 @@ export function AddTagDialog({ isOpen, onClose }: AddTagDialogProps) {
           >
             {(field) => (
               <Field data-invalid={field.state.meta.errors.length > 0}>
-                <FieldContent>
-                  <FieldLabel htmlFor={field.name}>Tag Name</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    type="text"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Enter tag name"
-                    disabled={createTag.isPending}
-                    aria-invalid={field.state.meta.errors.length > 0}
-                  />
-                  <FieldDescription>
-                    A short name to identify this tag
-                  </FieldDescription>
-                  {field.state.meta.errors.length > 0 && (
-                    <FieldError>{field.state.meta.errors[0]!}</FieldError>
-                  )}
-                </FieldContent>
+                <FieldLabel htmlFor={field.name}>Tag Name</FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  type="text"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Enter tag name"
+                  disabled={createTag.isPending}
+                  aria-invalid={field.state.meta.errors.length > 0}
+                />
+                <FieldDescription>
+                  A short name to identify this tag
+                </FieldDescription>
+                {field.state.meta.errors.length > 0 && (
+                  <FieldError>{field.state.meta.errors[0]!}</FieldError>
+                )}
               </Field>
             )}
           </form.Field>
@@ -144,27 +142,25 @@ export function AddTagDialog({ isOpen, onClose }: AddTagDialogProps) {
           >
             {(field) => (
               <Field data-invalid={field.state.meta.errors.length > 0}>
-                <FieldContent>
-                  <FieldLabel htmlFor={field.name}>
-                    Description (optional)
-                  </FieldLabel>
-                  <Textarea
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value ?? ""}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Enter description"
-                    disabled={createTag.isPending}
-                    aria-invalid={field.state.meta.errors.length > 0}
-                  />
-                  <FieldDescription>
-                    Optional description for this tag
-                  </FieldDescription>
-                  {field.state.meta.errors.length > 0 && (
-                    <FieldError>{field.state.meta.errors[0]!}</FieldError>
-                  )}
-                </FieldContent>
+                <FieldLabel htmlFor={field.name}>
+                  Description (optional)
+                </FieldLabel>
+                <Textarea
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value ?? ""}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Enter description"
+                  disabled={createTag.isPending}
+                  aria-invalid={field.state.meta.errors.length > 0}
+                />
+                <FieldDescription>
+                  Optional description for this tag
+                </FieldDescription>
+                {field.state.meta.errors.length > 0 && (
+                  <FieldError>{field.state.meta.errors[0]!}</FieldError>
+                )}
               </Field>
             )}
           </form.Field>

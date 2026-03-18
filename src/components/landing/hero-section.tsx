@@ -23,29 +23,21 @@ export default function HeroSection() {
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row">
             <Button
-              size="lg"
               className="group w-full sm:w-auto"
-              render={(props) => (
-                <Link href="/auth/login" {...props}>
-                  {props.children}
+              render={
+                <Link href="/auth/login">
+                  Get Started Free
+                  <ArrowRightIcon className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
-              )}
-            >
-              Get Started Free
-              <ArrowRightIcon className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
+              }
+              size="lg"
+            />
             <Button
+              className="w-full sm:w-auto"
+              render={<Link href="#features">Learn More</Link>}
               size="lg"
               variant="outline"
-              className="w-full sm:w-auto"
-              render={(props) => (
-                <Link href="#features" {...props}>
-                  {props.children}
-                </Link>
-              )}
-            >
-              Learn More
-            </Button>
+            />
           </div>
 
           <p className="text-muted-foreground mt-4 text-xs sm:mt-6 sm:text-sm">

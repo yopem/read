@@ -1,10 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import type { z } from "zod"
+
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { PlusIcon, XIcon } from "lucide-react"
-import type { z } from "zod"
+import { useEffect, useState } from "react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -16,17 +17,12 @@ import {
   DialogPopup,
   DialogTitle,
 } from "@/components/ui/dialog"
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field"
+import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { toast } from "@/components/ui/toast"
 import { updateFeedSchema } from "@/lib/db/schema"
 import { queryApi } from "@/lib/orpc/query"
+import { toast } from "@/lib/utils/toast"
 
 interface EditFeedDialogProps {
   isOpen: boolean
@@ -203,23 +199,21 @@ export function EditFeedDialog({
             >
               {(field) => (
                 <Field data-invalid={field.state.meta.errors.length > 0}>
-                  <FieldContent className="w-full">
-                    <FieldLabel htmlFor={field.name}>Feed Title</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      type="text"
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="My Favorite Blog"
-                      disabled={updateFeed.isPending}
-                      aria-invalid={field.state.meta.errors.length > 0}
-                    />
-                    {field.state.meta.errors.length > 0 && (
-                      <FieldError>{field.state.meta.errors[0]!}</FieldError>
-                    )}
-                  </FieldContent>
+                  <FieldLabel htmlFor={field.name}>Feed Title</FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    type="text"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="My Favorite Blog"
+                    disabled={updateFeed.isPending}
+                    aria-invalid={field.state.meta.errors.length > 0}
+                  />
+                  {field.state.meta.errors.length > 0 && (
+                    <FieldError>{field.state.meta.errors[0]!}</FieldError>
+                  )}
                 </Field>
               )}
             </form.Field>
@@ -240,24 +234,22 @@ export function EditFeedDialog({
             >
               {(field) => (
                 <Field data-invalid={field.state.meta.errors.length > 0}>
-                  <FieldContent className="w-full">
-                    <FieldLabel htmlFor={field.name}>
-                      Description (optional)
-                    </FieldLabel>
-                    <Textarea
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value ?? ""}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="A short description of this feed"
-                      disabled={updateFeed.isPending}
-                      aria-invalid={field.state.meta.errors.length > 0}
-                    />
-                    {field.state.meta.errors.length > 0 && (
-                      <FieldError>{field.state.meta.errors[0]!}</FieldError>
-                    )}
-                  </FieldContent>
+                  <FieldLabel htmlFor={field.name}>
+                    Description (optional)
+                  </FieldLabel>
+                  <Textarea
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value ?? ""}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="A short description of this feed"
+                    disabled={updateFeed.isPending}
+                    aria-invalid={field.state.meta.errors.length > 0}
+                  />
+                  {field.state.meta.errors.length > 0 && (
+                    <FieldError>{field.state.meta.errors[0]!}</FieldError>
+                  )}
                 </Field>
               )}
             </form.Field>

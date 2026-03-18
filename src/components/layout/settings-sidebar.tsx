@@ -1,7 +1,5 @@
 "use client"
 
-import { useState } from "react"
-import Link from "next/link"
 import {
   ArrowLeftIcon,
   MenuIcon,
@@ -9,7 +7,9 @@ import {
   RefreshCwIcon,
   TrashIcon,
 } from "lucide-react"
+import Link from "next/link"
 import { parseAsString, useQueryState } from "nuqs"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetPopup, SheetTrigger } from "@/components/ui/sheet"
@@ -60,14 +60,14 @@ function SidebarContent({
     <div className="flex h-full flex-col">
       <div className="border-border flex items-center gap-3 border-b px-4 py-4">
         <Button
-          variant="ghost"
-          size="icon"
-          render={(props) => (
-            <Link href="/" {...props}>
+          render={
+            <Link href="/">
               <ArrowLeftIcon className="h-4 w-4" />
               <span className="sr-only">Back to Home</span>
             </Link>
-          )}
+          }
+          size="icon"
+          variant="ghost"
         />
         <h2 className="text-lg font-semibold">Settings</h2>
       </div>
@@ -129,12 +129,12 @@ export function SettingsSidebar({ className }: SettingsSidebarProps) {
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
         <div className="bg-background border-border sticky top-0 z-10 flex items-center gap-3 border-b px-4 py-3 md:hidden">
           <SheetTrigger
-            render={(props) => (
-              <Button variant="ghost" size="icon" {...props}>
+            render={
+              <Button size="icon" variant="ghost">
                 <MenuIcon className="h-5 w-5" />
                 <span className="sr-only">Open settings menu</span>
               </Button>
-            )}
+            }
           />
           <h1 className="text-lg font-semibold">Settings</h1>
         </div>

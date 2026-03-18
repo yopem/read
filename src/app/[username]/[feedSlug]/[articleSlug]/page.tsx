@@ -1,10 +1,11 @@
 import type { Metadata } from "next"
-import { unstable_noStore as noStore } from "next/cache"
-import Link from "next/link"
-import { redirect } from "next/navigation"
+
 import dayjs from "dayjs"
 import { and, eq } from "drizzle-orm"
 import { ChevronLeftIcon } from "lucide-react"
+import { unstable_noStore as noStore } from "next/cache"
+import Link from "next/link"
+import { redirect } from "next/navigation"
 
 import { ArticleActions } from "@/components/article/article-actions"
 import { SafeImage } from "@/components/shared/safe-image"
@@ -175,17 +176,15 @@ export default async function ArticlePage({ params }: PageProps) {
       <header className="bg-background border-border sticky top-0 z-10 border-b-2 px-4 py-3">
         <div className="mx-auto flex max-w-6xl items-center gap-4">
           <Button
-            variant="ghost"
-            size="sm"
-            render={(props) => (
-              <Link href="/" {...props}>
-                {props.children}
+            render={
+              <Link href="/">
+                <ChevronLeftIcon className="h-4 w-4" />
+                <span>Back</span>
               </Link>
-            )}
-          >
-            <ChevronLeftIcon className="h-4 w-4" />
-            <span>Back</span>
-          </Button>
+            }
+            size="sm"
+            variant="ghost"
+          />
 
           <Breadcrumb>
             <BreadcrumbList>

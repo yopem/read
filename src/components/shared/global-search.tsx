@@ -1,5 +1,9 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
+import { FileTextIcon, RssIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { parseAsString, useQueryState } from "nuqs"
 import {
   createContext,
   useCallback,
@@ -8,20 +12,19 @@ import {
   useMemo,
   useState,
 } from "react"
-import { useRouter } from "next/navigation"
-import { useQuery } from "@tanstack/react-query"
-import { FileTextIcon, RssIcon } from "lucide-react"
-import { parseAsString, useQueryState } from "nuqs"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Command,
   CommandDialog,
+  CommandDialogPopup,
   CommandEmpty,
   CommandGroup,
+  CommandGroupLabel,
   CommandInput,
   CommandItem,
   CommandList,
+  CommandPanel,
 } from "@/components/ui/command"
 import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut"
 import { queryApi } from "@/lib/orpc/query"
@@ -198,140 +201,156 @@ export function GlobalSearchProvider({
       {children}
       {mounted && (
         <CommandDialog open={open} onOpenChange={handleOpenChange}>
-          <Command onKeyDown={handleKeyDown} shouldFilter={false}>
-            <CommandInput
-              placeholder="Search articles and feeds..."
-              value={query}
-              onValueChange={setQuery}
-              autoFocus
-            />
-            <CommandList>
-              {debouncedQuery.length < 2 ? (
-                <CommandEmpty>
-                  Type at least 2 characters to search
-                </CommandEmpty>
-              ) : error ? (
-                <CommandEmpty>
-                  <div className="flex flex-col items-center gap-2 py-4">
-                    <p className="text-destructive">
-                      {error instanceof Error &&
-                      error.message.includes("UNAUTHORIZED")
-                        ? "Please log in to search"
-                        : error instanceof Error &&
-                            error.message.includes("Rate limit")
-                          ? "Too many searches. Please wait a moment."
-                          : "Failed to search. Please try again."}
-                    </p>
-                    <button
-                      onClick={() => refetch()}
-                      className="text-primary mt-2 text-sm hover:underline"
-                    >
-                      Retry
-                    </button>
-                  </div>
-                </CommandEmpty>
-              ) : isSearching ? (
-                <CommandEmpty>Searching...</CommandEmpty>
-              ) : allResults.length === 0 ? (
-                <CommandEmpty>
-                  No results found. Try a different search term.
-                </CommandEmpty>
-              ) : (
-                <>
-                  {data?.feeds && data.feeds.length > 0 && (
-                    <CommandGroup heading="Feeds">
-                      {data.feeds.map((feed, index) => {
-                        const globalIndex = index
-                        return (
-                          <CommandItem
-                            key={feed.id}
-                            onSelect={() =>
-                              handleSelect({ type: "feed", item: feed })
-                            }
-                            className={cn(
-                              selectedIndex === globalIndex && "bg-accent",
-                            )}
+          <CommandDialogPopup>
+            <Command>
+              <CommandInput
+                autoFocus
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search articles and feeds..."
+                value={query}
+              />
+              <CommandPanel>
+                <CommandList>
+                  <div onKeyDown={handleKeyDown}>
+                    {debouncedQuery.length < 2 ? (
+                      <CommandEmpty>
+                        Type at least 2 characters to search
+                      </CommandEmpty>
+                    ) : error ? (
+                      <CommandEmpty>
+                        <div className="flex flex-col items-center gap-2 py-4">
+                          <p className="text-destructive">
+                            {error instanceof Error &&
+                            error.message.includes("UNAUTHORIZED")
+                              ? "Please log in to search"
+                              : error instanceof Error &&
+                                  error.message.includes("Rate limit")
+                                ? "Too many searches. Please wait a moment."
+                                : "Failed to search. Please try again."}
+                          </p>
+                          <button
+                            className="text-primary mt-2 text-sm hover:underline"
+                            onClick={() => refetch()}
                           >
-                            {feed.imageUrl ? (
-                              <Avatar className="h-8 w-8 shrink-0">
-                                <AvatarImage
-                                  src={feed.imageUrl}
-                                  alt={feed.title}
-                                />
-                                <AvatarFallback>
-                                  <RssIcon className="h-4 w-4" />
-                                </AvatarFallback>
-                              </Avatar>
-                            ) : (
-                              <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-                                <RssIcon className="h-4 w-4" />
-                              </div>
-                            )}
-                            <div className="flex min-w-0 flex-1 flex-col gap-1">
-                              <span className="truncate font-medium">
-                                {feed.title}
-                              </span>
-                              {feed.description && (
-                                <span className="text-muted-foreground truncate text-xs">
-                                  {feed.description}
-                                </span>
-                              )}
-                            </div>
-                          </CommandItem>
-                        )
-                      })}
-                    </CommandGroup>
-                  )}
-                  {data?.articles && data.articles.length > 0 && (
-                    <CommandGroup heading="Articles">
-                      {data.articles.map((article, index) => {
-                        const globalIndex = (data.feeds.length || 0) + index
-                        return (
-                          <CommandItem
-                            key={article.id}
-                            onSelect={() =>
-                              handleSelect({ type: "article", item: article })
-                            }
-                            className={cn(
-                              selectedIndex === globalIndex && "bg-accent",
-                            )}
-                          >
-                            {article.imageUrl || article.feed.imageUrl ? (
-                              <Avatar className="h-8 w-8 shrink-0 rounded-md">
-                                <AvatarImage
-                                  src={
-                                    article.imageUrl ??
-                                    article.feed.imageUrl ??
-                                    undefined
+                            Retry
+                          </button>
+                        </div>
+                      </CommandEmpty>
+                    ) : isSearching ? (
+                      <CommandEmpty>Searching...</CommandEmpty>
+                    ) : allResults.length === 0 ? (
+                      <CommandEmpty>
+                        No results found. Try a different search term.
+                      </CommandEmpty>
+                    ) : (
+                      <>
+                        {data?.feeds && data.feeds.length > 0 && (
+                          <CommandGroup>
+                            <CommandGroupLabel>Feeds</CommandGroupLabel>
+                            {data.feeds.map((feed, index) => {
+                              const globalIndex = index
+                              return (
+                                <CommandItem
+                                  className={cn(
+                                    selectedIndex === globalIndex &&
+                                      "bg-accent",
+                                  )}
+                                  key={feed.id}
+                                  onSelect={() =>
+                                    handleSelect({ type: "feed", item: feed })
                                   }
-                                  alt={article.title}
-                                />
-                                <AvatarFallback>
-                                  <FileTextIcon className="h-4 w-4" />
-                                </AvatarFallback>
-                              </Avatar>
-                            ) : (
-                              <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-                                <FileTextIcon className="h-4 w-4" />
-                              </div>
-                            )}
-                            <div className="flex min-w-0 flex-1 flex-col gap-1">
-                              <span className="truncate font-medium">
-                                {article.title}
-                              </span>
-                              <span className="text-muted-foreground truncate text-xs">
-                                {article.feed.title}
-                              </span>
-                            </div>
-                          </CommandItem>
-                        )
-                      })}
-                    </CommandGroup>
-                  )}
-                </>
-              )}
-            </CommandList>
-          </Command>
+                                  value={feed.id}
+                                >
+                                  {feed.imageUrl ? (
+                                    <Avatar className="h-8 w-8 shrink-0">
+                                      <AvatarImage
+                                        alt={feed.title}
+                                        src={feed.imageUrl}
+                                      />
+                                      <AvatarFallback>
+                                        <RssIcon className="h-4 w-4" />
+                                      </AvatarFallback>
+                                    </Avatar>
+                                  ) : (
+                                    <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+                                      <RssIcon className="h-4 w-4" />
+                                    </div>
+                                  )}
+                                  <div className="flex min-w-0 flex-1 flex-col gap-1">
+                                    <span className="truncate font-medium">
+                                      {feed.title}
+                                    </span>
+                                    {feed.description && (
+                                      <span className="text-muted-foreground truncate text-xs">
+                                        {feed.description}
+                                      </span>
+                                    )}
+                                  </div>
+                                </CommandItem>
+                              )
+                            })}
+                          </CommandGroup>
+                        )}
+                        {data?.articles && data.articles.length > 0 && (
+                          <CommandGroup>
+                            <CommandGroupLabel>Articles</CommandGroupLabel>
+                            {data.articles.map((article, index) => {
+                              const globalIndex =
+                                (data.feeds.length || 0) + index
+                              return (
+                                <CommandItem
+                                  className={cn(
+                                    selectedIndex === globalIndex &&
+                                      "bg-accent",
+                                  )}
+                                  key={article.id}
+                                  onSelect={() =>
+                                    handleSelect({
+                                      type: "article",
+                                      item: article,
+                                    })
+                                  }
+                                  value={article.id}
+                                >
+                                  {article.imageUrl || article.feed.imageUrl ? (
+                                    <Avatar className="h-8 w-8 shrink-0 rounded-md">
+                                      <AvatarImage
+                                        alt={article.title}
+                                        src={
+                                          article.imageUrl ??
+                                          article.feed.imageUrl ??
+                                          undefined
+                                        }
+                                      />
+                                      <AvatarFallback>
+                                        <FileTextIcon className="h-4 w-4" />
+                                      </AvatarFallback>
+                                    </Avatar>
+                                  ) : (
+                                    <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+                                      <FileTextIcon className="h-4 w-4" />
+                                    </div>
+                                  )}
+                                  <div className="flex min-w-0 flex-1 flex-col gap-1">
+                                    <span className="truncate font-medium">
+                                      {article.title}
+                                    </span>
+                                    <span className="text-muted-foreground truncate text-xs">
+                                      {article.feed.title}
+                                    </span>
+                                  </div>
+                                </CommandItem>
+                              )
+                            })}
+                          </CommandGroup>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </CommandList>
+              </CommandPanel>
+            </Command>
+          </CommandDialogPopup>
         </CommandDialog>
       )}
     </GlobalSearchContext.Provider>

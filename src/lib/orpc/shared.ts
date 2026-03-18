@@ -1,6 +1,7 @@
+import type { RouterClient } from "@orpc/server"
+
 import { createORPCClient, onError } from "@orpc/client"
 import { RPCLink } from "@orpc/client/fetch"
-import type { RouterClient } from "@orpc/server"
 
 import type { appRouter } from "@/lib/api/root"
 

@@ -377,7 +377,7 @@ export async function fetchFeedXML(feedUrl: string): Promise<string> {
   }
 }
 
-export async function parseFeed(
+export function parseFeed(
   url: string,
   feedType?: "rss" | "reddit" | "google_news",
 ): Promise<{

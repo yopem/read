@@ -1,8 +1,8 @@
 "use client"
 
-import { Suspense, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { parseAsString, useQueryState } from "nuqs"
+import { Suspense, useMemo } from "react"
 
 import { ArticleList } from "@/components/article/article-list"
 import { ArticleReader } from "@/components/article/article-reader"
@@ -33,6 +33,8 @@ import YopemServicesMenu from "@/components/yopem-services-menu"
 import { useAutoRefresh } from "@/hooks/use-auto-refresh"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { queryApi } from "@/lib/orpc/query"
+
+export const dynamic = "force-dynamic"
 
 function DashboardContent() {
   useAutoRefresh()
